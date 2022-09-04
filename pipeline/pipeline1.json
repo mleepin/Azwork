@@ -17,7 +17,30 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dataflow1",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"Table": {
+								"value": "'@{pipeline().parameters.Table}'",
+								"type": "Expression"
+							},
+							"Columns": {
+								"value": "'@{pipeline().parameters.Columns}'",
+								"type": "Expression"
+							},
+							"PrimaryKey": {
+								"value": "'@{pipeline().parameters.PrimaryKey}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"Csvnewchanges": {
+								"Container": "dmo",
+								"Directory": "dmo"
+							},
+							"existing": {
+								"Table": "Dimemployee"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -27,6 +50,20 @@
 				}
 			}
 		],
+		"parameters": {
+			"Table": {
+				"type": "string",
+				"defaultValue": "Dimemployee"
+			},
+			"Columns": {
+				"type": "string",
+				"defaultValue": "Name,Dept,Role"
+			},
+			"PrimaryKey": {
+				"type": "string",
+				"defaultValue": "PK"
+			}
+		},
 		"annotations": []
 	}
 }
