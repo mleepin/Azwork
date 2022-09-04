@@ -19,7 +19,15 @@
 					"name": "existing"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "hashpkcolumnsi"
@@ -73,7 +81,14 @@
 				"     Columns as string (\"Name,Dept,Role\"),",
 				"     PrimaryKey as string (\"PK\")",
 				"}",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          PK as string,",
+				"          Name as string,",
+				"          Dept as string,",
+				"          Role as string,",
+				"          From as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Csvnewchanges",
 				"source(output(",
@@ -112,7 +127,17 @@
 				"          Currentflag = true(),",
 				"          End = toDate(toString('2999-12-31'), \"yyyy-MM-dd\"),",
 				"     partitionBy('hash', 1)) ~> derivedColumn1",
-				"derivedColumn1 select(skipDuplicateMapInputs: false,",
+				"derivedColumn1 select(mapColumn(",
+				"          PK,",
+				"          Name,",
+				"          Dept,",
+				"          Role,",
+				"          From,",
+				"          End,",
+				"          Currentflag,",
+				"          SID",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> select1",
 				"select1 alterRow(insertIf(true())) ~> alterRow1",
 				"alterRow1, alterRow2 union(byName: true)~> union1",
@@ -133,7 +158,18 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"select2 alterRow(updateIf(true())) ~> alterRow2"
+				"select2 alterRow(updateIf(true())) ~> alterRow2",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:[($PrimaryKey)],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
