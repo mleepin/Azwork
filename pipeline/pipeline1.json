@@ -39,6 +39,9 @@
 							},
 							"existing": {
 								"Table": "Dimemployee"
+							},
+							"sink1": {
+								"Table": "Dimemployee"
 							}
 						}
 					},
