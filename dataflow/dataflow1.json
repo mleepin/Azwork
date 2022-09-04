@@ -56,11 +56,20 @@
 				},
 				{
 					"name": "exists2"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "alterRow2"
 				}
 			],
 			"scriptLines": [
 				"parameters{",
-				"     Table as string,",
+				"     Table as string (\"dimemployee\"),",
 				"     Columns as string (\"Name,Dept,Role\"),",
 				"     PrimaryKey as string (\"PK\")",
 				"}",
@@ -84,7 +93,7 @@
 				"Csvnewchanges derive(Hashcolumns = md5(byNames(split($Columns, ','))),",
 				"          HashPK = md5(byName($PrimaryKey))) ~> hashpkcolumnsi",
 				"existing filter(Currentflag ==true()) ~> filter1",
-				"hascolumnse, hashpkcolumnsi exists(Hashcolumns == Hashcolumnse",
+				"hashpkcolumnsi, hascolumnse exists(Hashcolumns == Hashcolumnse",
 				"     && HashPK == HashPKe,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> Checkifexist",
@@ -103,7 +112,16 @@
 				"          Currentflag = true(),",
 				"          End = toDate(toString('2999-12-31'), \"yyyy-MM-dd\"),",
 				"     partitionBy('hash', 1)) ~> derivedColumn1",
-				"derivedColumn1 select(mapColumn(",
+				"derivedColumn1 select(skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select1",
+				"select1 alterRow(insertIf(true())) ~> alterRow1",
+				"alterRow1, alterRow2 union(byName: true)~> union1",
+				"hascolumnse, hashpkcolumnsi exists(HashPKe == HashPK,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists2",
+				"exists2 derive(Currentflag = false(),",
+				"          End = toDate(toString(currentUTC(), \"yyyy-MM-dd\"), \"yyyy-MM-dd\")) ~> derivedColumn2",
+				"derivedColumn2 select(mapColumn(",
 				"          PK,",
 				"          Name,",
 				"          Dept,",
@@ -114,12 +132,8 @@
 				"          SID",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 alterRow(insertIf(true())) ~> alterRow1",
-				"alterRow1 union(byName: true)~> union1",
-				"hascolumnse, hashpkcolumnsi exists(HashPKe == HashPK,",
-				"     negate:false,",
-				"     broadcast: 'auto')~> exists2"
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 alterRow(updateIf(true())) ~> alterRow2"
 			]
 		}
 	}
