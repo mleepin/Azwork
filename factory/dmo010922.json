@@ -1,0 +1,9 @@
+{
+	"name": "dmo010922",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0d0dac58-bbd7-4285-b5c4-237e859a7bcf",
+		"tenantId": "3617ef9b-98b4-40d9-ba43-e1ed6709cf0d"
+	}
+}
