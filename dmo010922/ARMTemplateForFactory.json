@@ -64,7 +64,9 @@
 									"existing": {
 										"Table": "Dimemployee"
 									},
-									"sink1": {}
+									"sink1": {
+										"Table": "Dimemployee"
+									}
 								}
 							},
 							"staging": {},
