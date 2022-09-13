@@ -1,5 +1,5 @@
 {
-	"name": "pipeline2",
+	"name": "pipeline_control",
 	"properties": {
 		"activities": [
 			{
@@ -10,14 +10,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pipeline1",
+						"referenceName": "pipeline1_dim",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": false
 				}
 			},
 			{
-				"name": "Execute Pipeline2",
+				"name": "Execute Pipeline3",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -30,7 +30,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pipeline1",
+						"referenceName": "pipeline3_fct",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true

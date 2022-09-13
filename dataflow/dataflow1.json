@@ -17,13 +17,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "existing"
-				},
-				{
-					"dataset": {
-						"referenceName": "DelimitedText2",
-						"type": "DatasetReference"
-					},
-					"name": "fctd"
 				}
 			],
 			"sinks": [
@@ -80,15 +73,6 @@
 				},
 				{
 					"name": "alterRow2"
-				},
-				{
-					"name": "derivedColumn3"
-				},
-				{
-					"name": "lookup1"
-				},
-				{
-					"name": "flowlet1"
 				}
 			],
 			"scriptLines": [
@@ -121,14 +105,6 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> existing",
-				"source(output(",
-				"          FK_emp as string,",
-				"          Quantity_Sold as double,",
-				"          Date as date 'dd/MM/yyyy'",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> fctd",
 				"Csvnewchanges derive(Hashcolumns = md5(byNames(split($Columns, ','))),",
 				"          HashPK = md5(byName($PrimaryKey))) ~> hashpkcolumnsi",
 				"existing filter(Currentflag ==true()) ~> filter1",
@@ -183,14 +159,6 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
 				"select2 alterRow(updateIf(true())) ~> alterRow2",
-				"fctd derive(Datei = toString(Date, \"ddMMyyyy\")) ~> derivedColumn3",
-				"derivedColumn3, union1 lookup(FK_emp == PK",
-				"     && Date >= From",
-				"     && Date <= End,",
-				"     multiple: false,",
-				"     pickup: 'any',",
-				"     broadcast: 'right')~> lookup1",
-				"lookup1 compose(composition: 'undefined') ~> flowlet1@()",
 				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
