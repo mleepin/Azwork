@@ -40,6 +40,10 @@
 							"existing": {
 								"Table": "Dimemployee"
 							},
+							"fctd": {
+								"Container": "dmo",
+								"Directory": "fct"
+							},
 							"sink1": {
 								"Table": "Dimemployee"
 							}

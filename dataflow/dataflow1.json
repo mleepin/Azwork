@@ -83,6 +83,12 @@
 				},
 				{
 					"name": "derivedColumn3"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "flowlet1"
 				}
 			],
 			"scriptLines": [
@@ -178,6 +184,13 @@
 				"     skipDuplicateMapOutputs: true) ~> select2",
 				"select2 alterRow(updateIf(true())) ~> alterRow2",
 				"fctd derive(Datei = toString(Date, \"ddMMyyyy\")) ~> derivedColumn3",
+				"derivedColumn3, union1 lookup(FK_emp == PK",
+				"     && Date >= From",
+				"     && Date <= End,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'right')~> lookup1",
+				"lookup1 compose(composition: 'undefined') ~> flowlet1@()",
 				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -188,6 +201,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
