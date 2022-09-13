@@ -1,0 +1,209 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "Csvnewchanges"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "existing"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "fctd"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "hashpkcolumnsi"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "Checkifexist"
+				},
+				{
+					"name": "hascolumnse"
+				},
+				{
+					"name": "getmaxcurrentsid"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "union1"
+				},
+				{
+					"name": "exists2"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "alterRow2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "flowlet1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     Table as string (\"dimemployee\"),",
+				"     Columns as string (\"Name,Dept,Role\"),",
+				"     PrimaryKey as string (\"PK\")",
+				"}",
+				"source(output(",
+				"          PK as string,",
+				"          Name as string,",
+				"          Dept as string,",
+				"          Role as string,",
+				"          From as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Csvnewchanges",
+				"source(output(",
+				"          PK as string,",
+				"          Name as string,",
+				"          Dept as string,",
+				"          Role as string,",
+				"          From as date,",
+				"          End as date,",
+				"          Currentflag as boolean,",
+				"          SID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> existing",
+				"source(output(",
+				"          FK_emp as string,",
+				"          Quantity_Sold as double,",
+				"          Date as date 'dd/MM/yyyy'",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> fctd",
+				"Csvnewchanges derive(Hashcolumns = md5(byNames(split($Columns, ','))),",
+				"          HashPK = md5(byName($PrimaryKey))) ~> hashpkcolumnsi",
+				"existing filter(Currentflag ==true()) ~> filter1",
+				"hashpkcolumnsi, hascolumnse exists(Hashcolumns == Hashcolumnse",
+				"     && HashPK == HashPKe,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> Checkifexist",
+				"filter1 derive(HashPKe = md5(byName($PrimaryKey)),",
+				"          Hashcolumnse = md5(byNames(split($Columns, ',')))) ~> hascolumnse",
+				"hascolumnse aggregate(MaxSID = max(SID)) ~> getmaxcurrentsid",
+				"Checkifexist keyGenerate(output(tempkey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1, getmaxcurrentsid join(tempkey == MaxSID || true(),",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 derive(SID = tempkey + MaxSID,",
+				"          Currentflag = true(),",
+				"          End = toDate(toString('2999-12-31'), \"yyyy-MM-dd\"),",
+				"     partitionBy('hash', 1)) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          PK,",
+				"          Name,",
+				"          Dept,",
+				"          Role,",
+				"          From,",
+				"          End,",
+				"          Currentflag,",
+				"          SID",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select1",
+				"select1 alterRow(insertIf(true())) ~> alterRow1",
+				"alterRow1, alterRow2 union(byName: true)~> union1",
+				"hascolumnse, hashpkcolumnsi exists(HashPKe == HashPK,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists2",
+				"exists2 derive(Currentflag = false(),",
+				"          End = toDate(toString(currentUTC(), \"yyyy-MM-dd\"), \"yyyy-MM-dd\")) ~> derivedColumn2",
+				"derivedColumn2 select(mapColumn(",
+				"          PK,",
+				"          Name,",
+				"          Dept,",
+				"          Role,",
+				"          From,",
+				"          End,",
+				"          Currentflag,",
+				"          SID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 alterRow(updateIf(true())) ~> alterRow2",
+				"fctd derive(Datei = toString(Date, \"ddMMyyyy\")) ~> derivedColumn3",
+				"derivedColumn3, union1 lookup(FK_emp == PK",
+				"     && Date >= From",
+				"     && Date <= End,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'right')~> lookup1",
+				"lookup1 compose(composition: 'undefined') ~> flowlet1@()",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:[($PrimaryKey)],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
