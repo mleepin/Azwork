@@ -80,6 +80,9 @@
 				},
 				{
 					"name": "alterRow2"
+				},
+				{
+					"name": "derivedColumn3"
 				}
 			],
 			"scriptLines": [
@@ -112,7 +115,12 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> existing",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          FK_emp as string,",
+				"          Quantity_Sold as double,",
+				"          Date as date 'dd/MM/yyyy'",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> fctd",
 				"Csvnewchanges derive(Hashcolumns = md5(byNames(split($Columns, ','))),",
@@ -169,6 +177,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
 				"select2 alterRow(updateIf(true())) ~> alterRow2",
+				"fctd derive(Datei = toString(Date, \"ddMMyyyy\")) ~> derivedColumn3",
 				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
