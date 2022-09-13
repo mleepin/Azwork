@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "existing"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "fctd"
 				}
 			],
 			"sinks": [
@@ -105,6 +112,9 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> existing",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> fctd",
 				"Csvnewchanges derive(Hashcolumns = md5(byNames(split($Columns, ','))),",
 				"          HashPK = md5(byName($PrimaryKey))) ~> hashpkcolumnsi",
 				"existing filter(Currentflag ==true()) ~> filter1",
