@@ -30,9 +30,6 @@
 							"fctd": {
 								"Container": "dmo",
 								"Directory": "fct"
-							},
-							"sink1": {
-								"table": "fct"
 							}
 						}
 					},
