@@ -37,6 +37,9 @@
 				},
 				{
 					"name": "lookup1"
+				},
+				{
+					"name": "select3"
 				}
 			],
 			"scriptLines": [
@@ -86,7 +89,18 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'right')~> lookup1",
-				"lookup1 sink(allowSchemaDrift: true,",
+				"lookup1 select(mapColumn(",
+				"          FK_emp,",
+				"          Quantity_Sold,",
+				"          Date,",
+				"          Datei,",
+				"          From,",
+				"          End,",
+				"          SID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"select3 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
