@@ -19,7 +19,7 @@
 						"referenceName": "dataflow2",
 						"type": "DataFlowReference",
 						"parameters": {
-							"Table": "\"dimemployee\"",
+							"Table": "\"fct\"",
 							"Columns": "\"Name,Dept,Role\"",
 							"PrimaryKey": "\"PK\""
 						},
@@ -30,6 +30,9 @@
 							"fctd": {
 								"Container": "dmo",
 								"Directory": "fct"
+							},
+							"sink1": {
+								"table": "fct"
 							}
 						}
 					},

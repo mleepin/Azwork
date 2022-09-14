@@ -19,22 +19,24 @@
 					"name": "fctd"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "select2"
-				},
-				{
-					"name": "alterRow2"
 				},
 				{
 					"name": "derivedColumn3"
 				},
 				{
 					"name": "lookup1"
-				},
-				{
-					"name": "flowlet1"
 				}
 			],
 			"scriptLines": [
@@ -77,15 +79,23 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"select2 alterRow(updateIf(true())) ~> alterRow2",
 				"fctd derive(Datei = toString(Date, \"ddMMyyyy\")) ~> derivedColumn3",
-				"derivedColumn3, Updateddim lookup(FK_emp == PK",
+				"derivedColumn3, select2 lookup(FK_emp == PK",
 				"     && Date >= From",
 				"     && Date <= End,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'right')~> lookup1",
-				"lookup1 compose(composition: 'undefined') ~> flowlet1@()"
+				"lookup1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
