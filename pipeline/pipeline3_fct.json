@@ -44,6 +44,20 @@
 				}
 			}
 		],
+		"parameters": {
+			"Table": {
+				"type": "string",
+				"defaultValue": "Dimemployee"
+			},
+			"Columns": {
+				"type": "string",
+				"defaultValue": "Name,Dept,Role"
+			},
+			"PrimaryKey": {
+				"type": "string",
+				"defaultValue": "PK"
+			}
+		},
 		"annotations": []
 	}
 }
