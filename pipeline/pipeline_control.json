@@ -27,17 +27,7 @@
 						]
 					}
 				],
-				"userProperties": [
-					{
-						"name": "Table"
-					},
-					{
-						"name": "Columns"
-					},
-					{
-						"name": "PrimaryKey"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "pipeline3_fct",
