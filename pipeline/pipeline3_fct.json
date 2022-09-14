@@ -32,7 +32,7 @@
 								"Directory": "fct"
 							},
 							"sink1": {
-								"tablesi": "fct"
+								"table": "fct"
 							}
 						}
 					},
