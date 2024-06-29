@@ -1,0 +1,9 @@
+{
+	"name": "MBLEEPIN",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "4061b654-3d76-4e38-be9f-7c77e55aaeec",
+		"tenantId": "2e87bc10-c978-4e28-b0b7-f1c9fed67781"
+	}
+}
