@@ -128,7 +128,8 @@
 							"sink": {
 								"type": "DelimitedTextSink",
 								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
+									"type": "AzureBlobStorageWriteSettings",
+									"copyBehavior": "FlattenHierarchy"
 								},
 								"formatSettings": {
 									"type": "DelimitedTextWriteSettings",
@@ -268,11 +269,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt')",
-							"type": "Expression"
-						},
-						"folderPath": "incrementalcopy",
 						"container": "adftutorial"
 					},
 					"columnDelimiter": ",",
