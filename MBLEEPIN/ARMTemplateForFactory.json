@@ -61,7 +61,7 @@
 								"type": "DatasetReference",
 								"parameters": {}
 							},
-							"firstRowOnly": false
+							"firstRowOnly": true
 						}
 					},
 					{
@@ -269,7 +269,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "a",
 						"container": "adftutorial"
 					},
 					"columnDelimiter": ",",
