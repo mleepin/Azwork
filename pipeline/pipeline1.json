@@ -119,7 +119,7 @@
 				]
 			},
 			{
-				"name": "StoredProceduretoWriteWatemarkActivity.",
+				"name": "StoredProceduretoWriteWatemarkActivity",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
