@@ -170,15 +170,15 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LookupNewWaterMarkActivity",
+						"activity": "LookupOldWaterMarkActivity",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "LookupOldWaterMarkActivity",
+						"activity": "LookupNewWaterMarkActivity",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
