@@ -210,15 +210,15 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "LookupNewWaterMarkActivity",
+								"activity": "LookupOldWaterMarkActivity",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							},
 							{
-								"activity": "LookupOldWaterMarkActivity",
+								"activity": "LookupNewWaterMarkActivity",
 								"dependencyConditions": [
-									"Skipped"
+									"Succeeded"
 								]
 							}
 						],
@@ -337,7 +337,7 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"fileName": {
-							"value": "@concat('@trigger().startTime', '.txt')\n\n\n",
+							"value": "@concat('Test_', pipeline().TriggerTime, '.txt')\n\n\n\n",
 							"type": "Expression"
 						},
 						"folderPath": "incrementalcopy",
