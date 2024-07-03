@@ -1,0 +1,35 @@
+{
+	"name": "csvincrementalJul24",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "adftutorial"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "date",
+				"type": "String"
+			},
+			{
+				"name": "cat",
+				"type": "String"
+			},
+			{
+				"name": "number",
+				"type": "String"
+			}
+		]
+	}
+}
