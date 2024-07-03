@@ -1,0 +1,33 @@
+{
+	"name": "AzureSqlTableMultiCopyJul24",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azuremlee",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "cat",
+				"type": "varchar"
+			},
+			{
+				"name": "number",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "MultiCopyJuly24"
+		}
+	}
+}
