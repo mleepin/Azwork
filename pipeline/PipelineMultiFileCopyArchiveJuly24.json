@@ -36,6 +36,45 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "date",
+									"type": "String"
+								},
+								"sink": {
+									"name": "date",
+									"type": "datetime",
+									"physicalType": "datetime",
+									"scale": 3,
+									"precision": 23
+								}
+							},
+							{
+								"source": {
+									"name": "cat",
+									"type": "String"
+								},
+								"sink": {
+									"name": "cat",
+									"type": "varchar",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "number",
+									"type": "String"
+								},
+								"sink": {
+									"name": "number",
+									"type": "decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 10
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
