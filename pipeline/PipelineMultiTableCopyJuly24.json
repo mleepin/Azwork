@@ -97,13 +97,8 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
-									"writeBehavior": "upsert",
-									"upsertSettings": {
-										"useTempDB": false,
-										"interimSchemaName": "dbo"
-									},
-									"sqlWriterUseTableLock": false,
-									"disableMetricsCollection": false
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
 								},
 								"enableStaging": false,
 								"translator": {
@@ -123,7 +118,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "AzureSqlTabledynamicsink",
+									"referenceName": "AzureSQLtabledynamic2",
 									"type": "DatasetReference"
 								}
 							]
