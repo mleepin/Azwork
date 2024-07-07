@@ -1,14 +1,9 @@
 {
-	"name": "AzureSqlTableDynamic",
+	"name": "AzureSqlTabledynamicsink",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Azuremlee",
 			"type": "LinkedServiceReference"
-		},
-		"parameters": {
-			"SinkTableName": {
-				"type": "string"
-			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
