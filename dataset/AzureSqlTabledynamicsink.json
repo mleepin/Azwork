@@ -5,6 +5,11 @@
 			"referenceName": "Azuremlee",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"SinkTableName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": []
