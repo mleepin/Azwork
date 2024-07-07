@@ -1,0 +1,25 @@
+{
+	"name": "PipelineMultiTableCopyJuly24",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.tableList",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"tableList": {
+				"type": "array"
+			}
+		},
+		"annotations": []
+	}
+}
