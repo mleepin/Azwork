@@ -1,0 +1,37 @@
+{
+	"name": "loadmetadata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azuremlee",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "SourceSchemaName",
+				"type": "varchar"
+			},
+			{
+				"name": "SourceTableName",
+				"type": "varchar"
+			},
+			{
+				"name": "KeyColumnName",
+				"type": "varchar"
+			},
+			{
+				"name": "SinkSchemaName",
+				"type": "varchar"
+			},
+			{
+				"name": "SinkTableName",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "load_metadata"
+		}
+	}
+}
