@@ -8,6 +8,9 @@
 		"parameters": {
 			"SinkTableName": {
 				"type": "string"
+			},
+			"SinkSchemaName": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
