@@ -41,13 +41,7 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
-									"writeBehavior": "upsert",
-									"upsertSettings": {
-										"useTempDB": true,
-										"keys": [
-											""
-										]
-									},
+									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false,
 									"disableMetricsCollection": false
 								},
@@ -73,7 +67,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"SinkTableName": {
-											"value": "@item()",
+											"value": "@item().SinkTableName",
+											"type": "Expression"
+										},
+										"SinkSchemaName": {
+											"value": "@item().SinkSchemaName",
 											"type": "Expression"
 										}
 									}
