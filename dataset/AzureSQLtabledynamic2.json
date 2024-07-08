@@ -18,7 +18,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": {
-				"value": "dbo",
+				"value": "@dataset().SinkSchemaName",
 				"type": "Expression"
 			},
 			"table": {
