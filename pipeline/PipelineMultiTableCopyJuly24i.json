@@ -60,11 +60,11 @@
 									"referenceName": "AzureSQLtabledynamic2",
 									"type": "DatasetReference",
 									"parameters": {
-										"SinkTableName": {
+										"TableName": {
 											"value": "@item().SourceTableName",
 											"type": "Expression"
 										},
-										"SinkSchemaName": "@item().SourceSchemaName"
+										"SchemaName": "@item().SourceSchemaName"
 									}
 								}
 							],
@@ -73,11 +73,11 @@
 									"referenceName": "AzureSQLtabledynamic2",
 									"type": "DatasetReference",
 									"parameters": {
-										"SinkTableName": {
+										"TableName": {
 											"value": "@item().SinkTableName",
 											"type": "Expression"
 										},
-										"SinkSchemaName": {
+										"SchemaName": {
 											"value": "@item().SinkSchemaName",
 											"type": "Expression"
 										}

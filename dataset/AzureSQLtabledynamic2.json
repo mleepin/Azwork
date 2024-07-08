@@ -6,10 +6,10 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"SinkTableName": {
+			"TableName": {
 				"type": "string"
 			},
-			"SinkSchemaName": {
+			"SchemaName": {
 				"type": "string"
 			}
 		},
