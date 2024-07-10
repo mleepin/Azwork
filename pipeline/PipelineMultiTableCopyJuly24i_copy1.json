@@ -22,76 +22,6 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Copy data1",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "AzureSqlSink",
-									"writeBehavior": "upsert",
-									"upsertSettings": {
-										"useTempDB": true,
-										"keys": [
-											""
-										]
-									},
-									"sqlWriterUseTableLock": false,
-									"disableMetricsCollection": false
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference",
-									"parameters": {
-										"TableName": {
-											"value": "@item().SourceTableName",
-											"type": "Expression"
-										},
-										"SchemaName": "@item().SourceSchemaName"
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference",
-									"parameters": {
-										"TableName": {
-											"value": "@item().SinkTableName",
-											"type": "Expression"
-										},
-										"SchemaName": {
-											"value": "@item().SinkSchemaName",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						},
-						{
 							"name": "LookupoldWM",
 							"type": "Lookup",
 							"dependsOn": [],
@@ -106,42 +36,16 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderQuery": "select *  from dbo.watermarktable_New  where TableName = '@{item().SinkTableName}'",
+									"sqlReaderQuery": {
+										"value": "select *  from dbo.watermarktable_New  where TableName = '@{item().SinkTableName}'",
+										"type": "Expression"
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
 								"dataset": {
 									"referenceName": "AzureSqlTableWaterMarknew",
 									"type": "DatasetReference"
-								}
-							}
-						},
-						{
-							"name": "LookupnewWM",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": "select MAX(@{item().DateWM}) as NewWatermarkvalue from @{item().TableName}",
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference",
-									"parameters": {
-										"TableName": "item().TableName",
-										"SchemaName": "Land"
-									}
 								}
 							}
 						}
