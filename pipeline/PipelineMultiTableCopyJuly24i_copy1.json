@@ -117,7 +117,7 @@
 							}
 						},
 						{
-							"name": "Lookup3",
+							"name": "LookupnewWM",
 							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
@@ -172,6 +172,9 @@
 				"type": "string"
 			},
 			"SinkTableName": {
+				"type": "string"
+			},
+			"DateWM": {
 				"type": "string"
 			}
 		},
