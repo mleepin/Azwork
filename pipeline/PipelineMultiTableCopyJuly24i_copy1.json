@@ -106,7 +106,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderQuery": "select *  from dbo.watermarktable_New  where TableName = '@{item().TableName}'",
+									"sqlReaderQuery": "select *  from dbo.watermarktable_New  where TableName = '@{item().SinkTableName}'",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
