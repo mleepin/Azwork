@@ -127,7 +127,19 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": "select MAX(@{item().DateWM}) as NewWatermarkvalue from @{item().TableName}",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "AzureSQLtabledynamic2",
+									"type": "DatasetReference"
+								}
+							}
 						}
 					]
 				}
