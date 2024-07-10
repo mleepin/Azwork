@@ -1,0 +1,31 @@
+{
+	"name": "AzureSqlTableWaterMarknew",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azuremlee",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "TableName",
+				"type": "varchar"
+			},
+			{
+				"name": "WatermarkValue",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "SchemaName",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "watermarktable_New"
+		}
+	}
+}
