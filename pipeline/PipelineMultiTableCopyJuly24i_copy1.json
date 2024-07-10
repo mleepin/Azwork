@@ -137,7 +137,11 @@
 								},
 								"dataset": {
 									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": "item().TableName",
+										"SchemaName": "Land"
+									}
 								}
 							}
 						}
