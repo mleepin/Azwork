@@ -15,16 +15,6 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [],
-		"typeProperties": {
-			"schema": {
-				"value": "@dataset().SinkSchemaName",
-				"type": "Expression"
-			},
-			"table": {
-				"value": "@dataset().SinkTableName",
-				"type": "Expression"
-			}
-		}
+		"schema": []
 	}
 }
