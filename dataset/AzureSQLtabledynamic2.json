@@ -19,8 +19,8 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "",
-			"table": ""
+			"schema": "@{item().SinkSchemaName}",
+			"table": "@{item().SinkTableName}"
 		}
 	}
 }
