@@ -65,14 +65,14 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select MAX(@{item().DateWM}) as NewWatermarkvalue from @{item().TableName}",
+										"value": "select MAX('@{item().DateWM}') as NewWatermarkvalue from\n'@{item().SchemaName}'.'@{item().TableName}'",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
 								"dataset": {
-									"referenceName": "AzureSqlTableWaterMarknew",
+									"referenceName": "AzureSqlTableDynamic",
 									"type": "DatasetReference"
 								}
 							}
