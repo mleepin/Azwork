@@ -1,0 +1,12 @@
+{
+	"name": "AzureSqlTableSDynamicSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azuremlee",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
