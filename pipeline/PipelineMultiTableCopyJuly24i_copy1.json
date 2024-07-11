@@ -144,11 +144,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"TableName": {
-											"value": "@{item().SinkSchemaName}",
+											"value": "@{item().SinkTableName}",
 											"type": "Expression"
 										},
 										"SchemaName": {
-											"value": "@{item().SinkTableName}",
+											"value": "@{item().SinkSchemaName}",
 											"type": "Expression"
 										}
 									}
