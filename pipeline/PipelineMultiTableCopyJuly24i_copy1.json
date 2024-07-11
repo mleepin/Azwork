@@ -65,7 +65,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select MAX('@{item().DateWM}') as NewWatermarkvalue from '@{item().SourceTableName}'",
+										"value": "select MAX('@{item().DateWM}') as NewWatermarkvalue from @{item().SourceTableName}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
