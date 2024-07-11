@@ -44,7 +44,7 @@
 									"partitionOption": "None"
 								},
 								"dataset": {
-									"referenceName": "AzureSqlTableWaterMarknew",
+									"referenceName": "AzureSqlTableDynamic",
 									"type": "DatasetReference"
 								}
 							}
