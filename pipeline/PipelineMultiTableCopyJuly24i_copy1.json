@@ -76,6 +76,50 @@
 									"type": "DatasetReference"
 								}
 							}
+						},
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "LookupoldWM",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "LookupnewWM",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "SELECT * FROM\n@{item().SourceSchemaName}.@{item().SourceTableName} \nWHERE\n@{item().DateWM} >  \n'@{activity('LookupoldWM').output.firstRow.DateWM}'\nand\n@{item().DateWM} <=  \n'@{activity('LookupnewWM').output.firstRow.DateWM}'\n\n",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "AzureSqlTableDynamic",
+									"type": "DatasetReference"
+								}
+							]
 						}
 					]
 				}
