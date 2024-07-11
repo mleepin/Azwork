@@ -94,7 +94,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('LookupoldWM').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column} <= '@{activity(' LookupnewWM ').output.firstRow.NewWatermarkvalue}'",
+										"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('LookupoldWM').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column} <= '@{activity('LookupnewWM').output.firstRow.NewWatermarkvalue}'",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -131,7 +131,11 @@
 							"outputs": [
 								{
 									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": "@dataset().SinkTableName",
+										"SchemaName": "@dataset().SinkSchemaName"
+									}
 								}
 							]
 						}
