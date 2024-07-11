@@ -114,8 +114,13 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "TRUNCATE @{item().SinkSchemaName}.@{item().SinkTableName}",
+										"type": "Expression"
+									},
 									"writeBehavior": "insert",
-									"sqlWriterUseTableLock": false
+									"sqlWriterUseTableLock": false,
+									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
 								"translator": {
