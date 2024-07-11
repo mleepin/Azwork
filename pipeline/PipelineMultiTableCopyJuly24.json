@@ -53,7 +53,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('LookupoldWM').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column} <= '@{activity(' LookupnewWM ').output.firstRow.NewWatermarkvalue}'",
+										"value": "SELECT MAX(@{item().DateWM} AS NewWatermarkvalue FROM\n@{item().SourceSchemaName}.@{item().SourceTableName}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
