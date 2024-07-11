@@ -125,11 +125,7 @@
 							"outputs": [
 								{
 									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference",
-									"parameters": {
-										"TableName": "@dataset().SinkTableName",
-										"SchemaName": "@dataset().SinkSchemaName"
-									}
+									"type": "DatasetReference"
 								}
 							]
 						}

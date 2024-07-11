@@ -5,16 +5,6 @@
 			"referenceName": "Azuremlee",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"TableName": {
-				"type": "string",
-				"defaultValue": "@dataset().SinkTableName"
-			},
-			"SchemaName": {
-				"type": "string",
-				"defaultValue": "@dataset().SinkSchemaName"
-			}
-		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
