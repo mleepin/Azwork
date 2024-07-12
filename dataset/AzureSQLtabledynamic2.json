@@ -8,13 +8,19 @@
 		"parameters": {
 			"TAB": {
 				"type": "string"
+			},
+			"SCH": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "dbo",
+			"schema": {
+				"value": "@dataset().SCH",
+				"type": "Expression"
+			},
 			"table": {
 				"value": "@dataset().TAB",
 				"type": "Expression"
