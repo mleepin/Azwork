@@ -6,10 +6,6 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"Schema": {
-				"type": "string",
-				"defaultValue": "dbo"
-			},
 			"Table": {
 				"type": "string"
 			}
