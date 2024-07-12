@@ -106,7 +106,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "SELECT * FROM\n@{item().SourceSchemaName}.@{item().SourceTableName} \nWHERE\n@{item().DateWM} >  \n'@{activity('LookupoldWM').output.firstRow.DateWM}'\nand\n@{item().DateWM} <=  \n'@{activity('LookupnewWM').output.firstRow.DateWM}'\n\n",
+										"value": "SELECT * FROM\n@{item().SourceSchemaName}.@{item().SourceTableName} \nWHERE\n@{item().DateWM} >  \n'@{activity('LookupoldWM').output.firstRow.DateWM}'\nand\n@{item().DateWM} <=  \n'@{activity('LookupnewWM').output.firstRow.NewWatermarkvalue}'\n\n",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
