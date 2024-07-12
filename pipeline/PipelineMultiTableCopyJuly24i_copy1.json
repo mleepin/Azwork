@@ -114,6 +114,10 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "TRUNCATE TABLE @{item().SinkSchemaName}.@{item().SinkTableName}",
+										"type": "Expression"
+									},
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false,
 									"disableMetricsCollection": false
@@ -141,6 +145,10 @@
 									"parameters": {
 										"TAB": {
 											"value": "@item().SinkTableName",
+											"type": "Expression"
+										},
+										"SCH": {
+											"value": "@item().SinkSchemaName",
 											"type": "Expression"
 										}
 									}
