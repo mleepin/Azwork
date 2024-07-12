@@ -141,7 +141,13 @@
 							"outputs": [
 								{
 									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"TAB": {
+											"value": "@item().SinkTableName",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
