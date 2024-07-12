@@ -9,7 +9,7 @@
 			"Schema": {
 				"type": "string"
 			},
-			"table": {
+			"Table": {
 				"type": "string"
 			}
 		},
@@ -17,14 +17,8 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": {
-				"value": "@dataset().Schema",
-				"type": "Expression"
-			},
-			"table": {
-				"value": "@dataset().table",
-				"type": "Expression"
-			}
+			"schema": "land",
+			"table": "A"
 		}
 	}
 }

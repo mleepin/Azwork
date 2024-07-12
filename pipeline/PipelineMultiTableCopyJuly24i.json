@@ -64,30 +64,13 @@
 							"inputs": [
 								{
 									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference",
-									"parameters": {
-										"TableName": {
-											"value": "@item().SourceTableName",
-											"type": "Expression"
-										},
-										"SchemaName": "@item().SourceSchemaName"
-									}
+									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
 								{
 									"referenceName": "AzureSQLtabledynamic2",
-									"type": "DatasetReference",
-									"parameters": {
-										"TableName": {
-											"value": "@item().SinkTableName",
-											"type": "Expression"
-										},
-										"SchemaName": {
-											"value": "@item().SinkSchemaName",
-											"type": "Expression"
-										}
-									}
+									"type": "DatasetReference"
 								}
 							]
 						}
