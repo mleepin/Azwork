@@ -174,26 +174,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"SourceSchemaName": {
-				"type": "string"
-			},
-			"SourceTableName": {
-				"type": "string"
-			},
-			"KeyColumnName": {
-				"type": "string"
-			},
-			"SinkSchemaName": {
-				"type": "string"
-			},
-			"SinkTableName": {
-				"type": "string"
-			},
-			"DateWM": {
-				"type": "string"
-			}
-		},
 		"annotations": []
 	}
 }
