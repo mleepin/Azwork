@@ -154,6 +154,47 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Stored procedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Copy data1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[usp_write_watermark_new]",
+								"storedProcedureParameters": {
+									"LastModifiedtime": {
+										"value": "",
+										"type": "DateTime"
+									},
+									"SchemaName": {
+										"value": "",
+										"type": "String"
+									},
+									"TableName": {
+										"value": "",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "Azuremlee",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
