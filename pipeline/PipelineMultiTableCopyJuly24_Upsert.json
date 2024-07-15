@@ -114,10 +114,6 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
-									"preCopyScript": {
-										"value": "TRUNCATE TABLE @{item().SinkSchemaName}.@{item().SinkTableName}",
-										"type": "Expression"
-									},
 									"writeBehavior": "upsert",
 									"upsertSettings": {
 										"useTempDB": true,
