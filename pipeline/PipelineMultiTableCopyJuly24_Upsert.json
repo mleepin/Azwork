@@ -118,7 +118,14 @@
 										"value": "TRUNCATE TABLE @{item().SinkSchemaName}.@{item().SinkTableName}",
 										"type": "Expression"
 									},
-									"writeBehavior": "insert",
+									"writeBehavior": "upsert",
+									"upsertSettings": {
+										"useTempDB": true,
+										"keys": {
+											"value": "@array(concat(item().KeyColumnName))",
+											"type": "Expression"
+										}
+									},
 									"sqlWriterUseTableLock": false,
 									"disableMetricsCollection": false
 								},
