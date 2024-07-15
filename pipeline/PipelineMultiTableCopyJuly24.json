@@ -37,7 +37,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select *  from dbo.watermarktable_New  where TableName = '@{item().SinkTableName}' and '@{item().SinkSchemaName}'",
+										"value": "select *  from dbo.watermarktable_New  where TableName = '@{item().SinkTableName}' and SchemaName = '@{item().SinkSchemaName}'",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
