@@ -37,7 +37,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select *  from dbo.watermarktable_New  where TableName = '@{item().SinkTableName}'",
+										"value": "select *  from dbo.watermarktable_New  where TableName = '@{item().SinkTableName}' and '@{item().SinkSchemaName}'",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -178,15 +178,15 @@
 								"storedProcedureName": "[dbo].[usp_write_watermark_new]",
 								"storedProcedureParameters": {
 									"LastModifiedtime": {
-										"value": "",
+										"value": "@{activity('LookupNewWM').output.firstRow.NewWatermarkvalue}",
 										"type": "DateTime"
 									},
 									"SchemaName": {
-										"value": "",
+										"value": "@{item().SinkSchemaName}",
 										"type": "String"
 									},
 									"TableName": {
-										"value": "",
+										"value": "@{item().SinkTableName}",
 										"type": "String"
 									}
 								}
