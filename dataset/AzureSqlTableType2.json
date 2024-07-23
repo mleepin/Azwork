@@ -1,0 +1,24 @@
+{
+	"name": "AzureSqlTableType2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azuremlee",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Table": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().Table",
+				"type": "Expression"
+			}
+		}
+	}
+}
