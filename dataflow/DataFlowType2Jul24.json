@@ -17,13 +17,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "sourcenewchanges"
-				},
-				{
-					"dataset": {
-						"referenceName": "DelimitedTextType2Jul24",
-						"type": "DatasetReference"
-					},
-					"name": "source1"
 				}
 			],
 			"sinks": [],
@@ -43,17 +36,8 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
-				"source(output(",
-				"          Name as string,",
-				"          ID as string,",
-				"          Group as string,",
-				"          Value as string,",
-				"          Start as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1"
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> sourcenewchanges"
 			]
 		}
 	}

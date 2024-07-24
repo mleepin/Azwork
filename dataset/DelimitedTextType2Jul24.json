@@ -7,7 +7,8 @@
 		},
 		"parameters": {
 			"Folder": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Type2TuteJul24"
 			}
 		},
 		"annotations": [],
