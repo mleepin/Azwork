@@ -25,7 +25,7 @@
 					"name": "filter1"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "DerivedColumnHashColumns"
 				}
 			],
 			"scriptLines": [
@@ -51,7 +51,7 @@
 				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
 				"sourcenewchanges filter(!isNull(ID)) ~> filter1",
 				"filter1 derive(ID_Hash = md5(byNames(split($PK,','))),",
-				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> derivedColumn1"
+				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> DerivedColumnHashColumns"
 			]
 		}
 	}
