@@ -26,6 +26,9 @@
 				},
 				{
 					"name": "DerivedColumnHashColumns"
+				},
+				{
+					"name": "filter2"
 				}
 			],
 			"scriptLines": [
@@ -51,7 +54,8 @@
 				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
 				"sourcenewchanges filter(!isNull(ID)) ~> filter1",
 				"filter1 derive(ID_Hash = md5(byNames(split($PK,','))),",
-				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> DerivedColumnHashColumns"
+				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> DerivedColumnHashColumns",
+				"sourceexisting filter(byName('Active') == 'Y') ~> filter2"
 			]
 		}
 	}
