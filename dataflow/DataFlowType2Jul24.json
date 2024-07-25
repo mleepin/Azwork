@@ -20,8 +20,19 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
+				"parameters{",
+				"     PK as string ('ID'),",
+				"     COLS as string ('Group, Value')",
+				"}",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     limit: 100,",
@@ -37,7 +48,9 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
-				"     ignoreNoFilesFound: false) ~> sourcenewchanges"
+				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
+				"sourcenewchanges filter(!isNull(ID)) ~> filter1",
+				"filter1 derive() ~> derivedColumn1"
 			]
 		}
 	}
