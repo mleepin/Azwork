@@ -31,7 +31,7 @@
 			"scriptLines": [
 				"parameters{",
 				"     PK as string ('ID'),",
-				"     COLS as string ('Group, Value')",
+				"     COLS as string ('Name, Group, Value')",
 				"}",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -50,7 +50,8 @@
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
 				"sourcenewchanges filter(!isNull(ID)) ~> filter1",
-				"filter1 derive() ~> derivedColumn1"
+				"filter1 derive(ID_Hash = md5(byNames(split($PK,','))),",
+				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> derivedColumn1"
 			]
 		}
 	}

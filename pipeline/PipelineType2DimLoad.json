@@ -17,7 +17,15 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DataFlowType2Jul24",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sourceexisting": {
+								"Table": "T2customer"
+							},
+							"sourcenewchanges": {
+								"Folder": "Type2TuteJul24"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
