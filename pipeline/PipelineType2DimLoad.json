@@ -18,6 +18,10 @@
 					"dataflow": {
 						"referenceName": "DataFlowType2Jul24",
 						"type": "DataFlowReference",
+						"parameters": {
+							"PK": "'ID'",
+							"COLS": "'Name, Group, Value'"
+						},
 						"datasetParameters": {
 							"sourceexisting": {
 								"Table": "T2customer"
