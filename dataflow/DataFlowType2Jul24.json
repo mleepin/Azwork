@@ -71,7 +71,7 @@
 				"     && DerivedColumnHashColumns@Cols_Hash == derivedColumn1@Cols_Hash,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> exists1",
-				"derivedColumn1 aggregate(TEST = MAX('Key')) ~> aggregate1"
+				"derivedColumn1 aggregate(A = max(byName('Key'))) ~> aggregate1"
 			]
 		}
 	}
