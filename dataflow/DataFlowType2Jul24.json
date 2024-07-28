@@ -89,7 +89,7 @@
 				"exists1 keyGenerate(output(Keynew as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"join1 derive(Key = toInteger('Keynew') + toInteger('MaxKey')) ~> derivedColumn2"
+				"join1 derive(Key = toInteger(byName('MaxKey'))   +  toInteger(byName('Keynew')) ) ~> derivedColumn2"
 			]
 		}
 	}
