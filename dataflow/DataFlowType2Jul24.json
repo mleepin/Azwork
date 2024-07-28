@@ -70,7 +70,7 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
-				"sourcenewchanges filter(!isNull(ID)) ~> filter1",
+				"sourcenewchanges filter(!isNull(byName('ID'))) ~> filter1",
 				"filter1 derive(ID_Hash = md5(byNames(split($PK,','))),",
 				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> DerivedColumnHashColumns",
 				"sourceexisting filter(byName('Active') == 'Y') ~> filter2",
