@@ -112,7 +112,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"sourcenewchanges filter(ERROR_FUNCTION('!isNull((ByName(__SINGLE_QUOTE__ID__SINGLE_QUOTE__))')) ~> filter3"
+				"sourcenewchanges filter(!isNull(byName('ID'))) ~> filter3"
 			]
 		}
 	}
