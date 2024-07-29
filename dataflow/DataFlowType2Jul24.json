@@ -82,7 +82,8 @@
 				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
 				"sourcenewchanges filter(!isNull(byName('ID'))) ~> filter1",
 				"filter1 derive(ID_Hash = md5(byNames(split($PK,','))),",
-				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> DerivedColumnHashColumns",
+				"          Cols_Hash = md5(byNames(split($COLS,','))),",
+				"          column1 = md5(toInteger(byNames(split($PK,','))))) ~> DerivedColumnHashColumns",
 				"sourceexisting filter(byName('Active') == 'Y') ~> filter2",
 				"filter2 derive(ID_Hash = md5(byNames(split($PK,','))),",
 				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> derivedColumn1",
@@ -115,7 +116,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"derivedColumn1 aggregate(MaxKey = max(byName('Key'))) ~> aggregate2",
-				"derivedColumn1, ModifyColumns1 exists(derivedColumn1@ID_Hash == DerivedColumnHashColumns@ID_Hash,",
+				"DerivedColumnHashColumns, derivedColumn1 exists(DerivedColumnHashColumns@ID_Hash == derivedColumn1@ID_Hash,",
 				"     negate:false,",
 				"     broadcast: 'auto')~> exists2",
 				"DerivedColumnHashColumns derive(ID = toInteger(ID)) ~> ModifyColumns1"
