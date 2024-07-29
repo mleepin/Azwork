@@ -22,9 +22,6 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "DerivedColumnHashColumns"
-				},
-				{
 					"name": "filter2"
 				},
 				{
@@ -35,24 +32,6 @@
 				},
 				{
 					"name": "aggregate2"
-				},
-				{
-					"name": "exists2"
-				},
-				{
-					"name": "surrogateKey1"
-				},
-				{
-					"name": "join1"
-				},
-				{
-					"name": "derivedColumn2"
-				},
-				{
-					"name": "select1"
-				},
-				{
-					"name": "filter3"
 				}
 			],
 			"scriptLines": [
@@ -76,43 +55,13 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
-				"filter3 derive(ID_Hash = md5(byNames(split($PK,','))),",
-				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> DerivedColumnHashColumns",
 				"sourceexisting filter(byName('Active') == 'Y') ~> filter2",
 				"filter2 derive(ID_Hash = md5(byNames(split($PK,','))),",
 				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> derivedColumn1",
-				"derivedColumn1, DerivedColumnHashColumns exists(DerivedColumnHashColumns@ID_Hash == derivedColumn1@ID_Hash,",
+				"derivedColumn1, sourcenewchanges exists(DerivedColumnHashColumns@ID_Hash == derivedColumn1@ID_Hash,",
 				"     negate:false,",
 				"     broadcast: 'auto')~> exists1",
-				"derivedColumn1 aggregate(MaxKey = max(byName('Key'))) ~> aggregate2",
-				"DerivedColumnHashColumns, derivedColumn1 exists(DerivedColumnHashColumns@ID_Hash == derivedColumn1@ID_Hash",
-				"     && DerivedColumnHashColumns@Cols_Hash == derivedColumn1@Cols_Hash,",
-				"     negate:true,",
-				"     broadcast: 'auto')~> exists2",
-				"exists2 keyGenerate(output(KeyNew as long),",
-				"     startAt: 1L,",
-				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1, aggregate2 join(1==1,",
-				"     joinType:'cross',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
-				"join1 derive(Active = \"Y\",",
-				"          End = toTimestamp(null()),",
-				"          Key = KeyNew + toInteger(MaxKey)) ~> derivedColumn2",
-				"derivedColumn2 select(mapColumn(",
-				"          Name,",
-				"          ID,",
-				"          Group,",
-				"          Value,",
-				"          Key,",
-				"          Active,",
-				"          Start,",
-				"          End",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"sourcenewchanges filter(!isNull(byName('ID'))) ~> filter3"
+				"derivedColumn1 aggregate(MaxKey = max(byName('Key'))) ~> aggregate2"
 			]
 		}
 	}
