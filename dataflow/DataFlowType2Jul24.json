@@ -50,7 +50,7 @@
 			"scriptLines": [
 				"parameters{",
 				"     PK as string ('ID'),",
-				"     COLS as string ('Name, Group, Value')",
+				"     COLS as string ('Name,Group,Value')",
 				"}",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
