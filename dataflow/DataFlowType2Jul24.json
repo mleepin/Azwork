@@ -50,6 +50,9 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "filter3"
 				}
 			],
 			"scriptLines": [
@@ -73,7 +76,7 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false) ~> sourcenewchanges",
-				"sourcenewchanges derive(ID_Hash = md5(byNames(split($PK,','))),",
+				"filter3 derive(ID_Hash = md5(byNames(split($PK,','))),",
 				"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> DerivedColumnHashColumns",
 				"sourceexisting filter(byName('Active') == 'Y') ~> filter2",
 				"filter2 derive(ID_Hash = md5(byNames(split($PK,','))),",
@@ -108,7 +111,8 @@
 				"          End",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"sourcenewchanges filter(!isNull(byName('ID'))) ~> filter3"
 			]
 		}
 	}
