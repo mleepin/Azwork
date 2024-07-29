@@ -47,6 +47,9 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -91,7 +94,20 @@
 				"     stepValue: 1L) ~> surrogateKey1",
 				"join1 derive(Key = toInteger(byName('MaxKey'))   +  toInteger(byName('Keynew')),",
 				"          Active = \"Y\",",
-				"          End = toTimestamp(toString(null()))) ~> derivedColumn2"
+				"          End = toTimestamp(toString(null())),",
+				"          StartNew = toTimestamp(toString('start'))) ~> derivedColumn2",
+				"derivedColumn2 select(mapColumn(",
+				"          Name,",
+				"          ID,",
+				"          Group,",
+				"          Value,",
+				"          Key,",
+				"          Active,",
+				"          Start,",
+				"          End",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
