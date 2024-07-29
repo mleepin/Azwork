@@ -45,6 +45,15 @@
 				},
 				{
 					"name": "exists2"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "derivedColumn3"
 				}
 			],
 			"scriptLines": [
@@ -83,7 +92,18 @@
 				"derivedColumn2, derivedColumn1 exists(IDHashNew == ID_Hash",
 				"     && ColsHashNew == Cols_Hash,",
 				"     negate:true,",
-				"     broadcast: 'auto')~> exists2"
+				"     broadcast: 'auto')~> exists2",
+				"exists2 keyGenerate(output(KeyNew as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1, aggregate2 join(1==1,",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 derive(Active = \"Y\",",
+				"          End = toTimestamp(null()),",
+				"          Key = toInteger(byName('MaxKey'))  +  KeyNew) ~> derivedColumn3"
 			]
 		}
 	}
