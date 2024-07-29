@@ -37,9 +37,6 @@
 					"name": "exists1"
 				},
 				{
-					"name": "aggregate1"
-				},
-				{
 					"name": "join1"
 				},
 				{
@@ -50,6 +47,12 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "aggregate2"
+				},
+				{
+					"name": "exists2"
 				}
 			],
 			"scriptLines": [
@@ -83,8 +86,7 @@
 				"     && DerivedColumnHashColumns@Cols_Hash == derivedColumn1@Cols_Hash,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> exists1",
-				"derivedColumn1 aggregate(MaxKey = max(byName('Key'))) ~> aggregate1",
-				"surrogateKey1, aggregate1 join(1==1,",
+				"surrogateKey1, derivedColumn1 join(1==1,",
 				"     joinType:'cross',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -107,7 +109,11 @@
 				"          End",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn1 aggregate(MaxKey = max(byName('Key'))) ~> aggregate2",
+				"derivedColumn1, DerivedColumnHashColumns exists(derivedColumn1@ID_Hash == DerivedColumnHashColumns@ID_Hash,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists2"
 			]
 		}
 	}
