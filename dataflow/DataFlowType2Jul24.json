@@ -69,6 +69,9 @@
 				},
 				{
 					"name": "select2"
+				},
+				{
+					"name": "union1"
 				}
 			],
 			"scriptLines": [
@@ -110,7 +113,8 @@
 				"     broadcast: 'auto')~> exists1",
 				"derivedColumn1 aggregate(MaxKey = max(byName('Key'))) ~> aggregate2",
 				"sourcenewchanges derive(ID = toInteger(ID),",
-				"          Value = toInteger(Value)) ~> ModifyColumns1",
+				"          Value = toInteger(Value),",
+				"          Start = toTimestamp(Start, 'yyyy-MM-dd')) ~> ModifyColumns1",
 				"ModifyColumns1 filter(!isNull(byName('ID'))) ~> filter3",
 				"filter3 derive(IDHashNew = md5(byNames(split($PK,','))),",
 				"          ColsHashNew = md5(byNames(split($COLS,',')))) ~> derivedColumn2",
@@ -136,7 +140,7 @@
 				"          Value,",
 				"          Key,",
 				"          Active,",
-				"          Start,",
+				"          Start = sourcenewchanges@Start,",
 				"          End",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
@@ -156,7 +160,8 @@
 				"          End",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2"
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2, alterRow1 union(byName: true)~> union1"
 			]
 		}
 	}
