@@ -136,8 +136,6 @@
 				"          End = currentUTC()) ~> derivedColumn4",
 				"derivedColumn4 alterRow(updateIf(true())) ~> alterRow2",
 				"alterRow2 select(mapColumn(",
-				"          ID_Hash,",
-				"          Cols_Hash,",
 				"          Active,",
 				"          End",
 				"     ),",
