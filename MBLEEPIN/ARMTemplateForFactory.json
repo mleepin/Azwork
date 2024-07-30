@@ -11,21 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzBlobStorage'"
 		},
-		"Azuremlee_password": {
+		"Azuremlee_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'Azuremlee'"
-		},
-		"Azuremlee_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "mleep.database.windows.net"
-		},
-		"Azuremlee_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "mlee"
-		},
-		"Azuremlee_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "mleepin"
+			"metadata": "Secure string for 'connectionString' of 'Azuremlee'"
 		}
 	},
 	"variables": {
@@ -625,9 +613,264 @@
 												"value": "TRUNCATE TABLE @{item().SinkSchemaName}.@{item().SinkTableName}",
 												"type": "Expression"
 											},
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "AzureSqlTableSDynamicSource",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "AzureSQLtabledynamic2",
+											"type": "DatasetReference",
+											"parameters": {
+												"TAB": {
+													"value": "@item().SinkTableName",
+													"type": "Expression"
+												},
+												"SCH": {
+													"value": "@item().SinkSchemaName",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Stored procedure1",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [
+										{
+											"activity": "Copy data1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[usp_write_watermark_new]",
+										"storedProcedureParameters": {
+											"LastModifiedtime": {
+												"value": {
+													"value": "@{activity('LookupNewWM').output.firstRow.NewWatermarkvalue}",
+													"type": "Expression"
+												},
+												"type": "DateTime"
+											},
+											"SchemaName": {
+												"value": {
+													"value": "@{item().SinkSchemaName}",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"TableName": {
+												"value": {
+													"value": "@{item().SinkTableName}",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "Azuremlee",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "loadmetadata",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/loadmetadata')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTableDynamic')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTableSDynamicSource')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSQLtabledynamic2')]",
+				"[concat(variables('factoryId'), '/linkedServices/Azuremlee')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PipelineMultiTableCopyJuly24_Upsert')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup1').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "LookupoldWM",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "select *  from dbo.watermarktable_New  where TableName = '@{item().SinkTableName}' and SchemaName = '@{item().SinkSchemaName}'",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "AzureSqlTableDynamic",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									}
+								},
+								{
+									"name": "LookupnewWM",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "select MAX(@{item().DateWM}) as NewWatermarkvalue from\n@{item().SourceSchemaName}.@{item().SourceTableName}\n\n\n",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "AzureSqlTableDynamic",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									}
+								},
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "LookupoldWM",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										},
+										{
+											"activity": "LookupnewWM",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "SELECT * FROM\n@{item().SourceSchemaName}.@{item().SourceTableName} \nWHERE\n@{item().DateWM} >  \n'@{activity('LookupoldWM').output.firstRow.Watermarkvalue}'\nand\n@{item().DateWM} <=  \n'@{activity('LookupnewWM').output.firstRow.NewWatermarkvalue}'\n\n",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
 											"writeBehavior": "upsert",
 											"upsertSettings": {
-												"useTempDB": true
+												"useTempDB": true,
+												"keys": {
+													"value": "@array(concat(item().KeyColumnName))",
+													"type": "Expression"
+												}
 											},
 											"sqlWriterUseTableLock": false,
 											"disableMetricsCollection": false
@@ -689,15 +932,24 @@
 										"storedProcedureName": "[[dbo].[usp_write_watermark_new]",
 										"storedProcedureParameters": {
 											"LastModifiedtime": {
-												"value": "@{activity('LookupNewWM').output.firstRow.NewWatermarkvalue}",
+												"value": {
+													"value": "@{activity('LookupNewWM').output.firstRow.NewWatermarkvalue}",
+													"type": "Expression"
+												},
 												"type": "DateTime"
 											},
 											"SchemaName": {
-												"value": "@{item().SinkSchemaName}",
+												"value": {
+													"value": "@{item().SinkSchemaName}",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"TableName": {
-												"value": "@{item().SinkTableName}",
+												"value": {
+													"value": "@{item().SinkTableName}",
+													"type": "Expression"
+												},
 												"type": "String"
 											}
 										}
@@ -748,6 +1000,60 @@
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTableSDynamicSource')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSQLtabledynamic2')]",
 				"[concat(variables('factoryId'), '/linkedServices/Azuremlee')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PipelineType2DimLoad')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DataFlowType2Jul24",
+								"type": "DataFlowReference",
+								"parameters": {
+									"PK": "'ID'",
+									"COLS": "'Name, Group, Value'"
+								},
+								"datasetParameters": {
+									"sourceexisting": {
+										"Table": "T2customer"
+									},
+									"sourcenewchanges": {
+										"Folder": "Type2TuteJul24"
+									},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DataFlowType2Jul24')]"
 			]
 		},
 		{
@@ -994,6 +1300,36 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTableType2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azuremlee",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Table": {
+						"type": "string",
+						"defaultValue": "T2customer"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().Table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Azuremlee')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTableWaterMarknew')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1059,6 +1395,64 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Azuremlee')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedTextType2Jul24')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Folder": {
+						"type": "string",
+						"defaultValue": "Type2TuteJul24"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@dataset().Folder",
+							"type": "Expression"
+						},
+						"container": "adftutorial"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "ID",
+						"type": "String"
+					},
+					{
+						"name": "Group",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					},
+					{
+						"name": "Start",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzBlobStorage')]"
 			]
 		},
 		{
@@ -1166,19 +1560,201 @@
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"server": "[parameters('Azuremlee_properties_typeProperties_server')]",
-					"database": "[parameters('Azuremlee_properties_typeProperties_database')]",
-					"encrypt": "mandatory",
-					"trustServerCertificate": false,
-					"authenticationType": "SQL",
-					"userName": "[parameters('Azuremlee_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('Azuremlee_password')]"
-					}
+					"connectionString": "[parameters('Azuremlee_connectionString')]"
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataFlowType2Jul24')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTableType2",
+								"type": "DatasetReference"
+							},
+							"name": "sourceexisting"
+						},
+						{
+							"dataset": {
+								"referenceName": "DelimitedTextType2Jul24",
+								"type": "DatasetReference"
+							},
+							"name": "sourcenewchanges"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTableType2",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "filter2"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "exists1"
+						},
+						{
+							"name": "aggregate2"
+						},
+						{
+							"name": "ModifyColumns1",
+							"description": "Autogenerated by data preview actions"
+						},
+						{
+							"name": "filter3"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "exists2"
+						},
+						{
+							"name": "surrogateKey1"
+						},
+						{
+							"name": "join1"
+						},
+						{
+							"name": "derivedColumn3"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "alterRow1"
+						},
+						{
+							"name": "derivedColumn4"
+						},
+						{
+							"name": "alterRow2"
+						},
+						{
+							"name": "select2"
+						},
+						{
+							"name": "union1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     PK as string ('ID'),",
+						"     COLS as string ('Name,Group,Value')",
+						"}",
+						"source(output(",
+						"          Name as string,",
+						"          ID as integer,",
+						"          Group as string,",
+						"          Value as integer,",
+						"          Key as integer,",
+						"          Active as string,",
+						"          Start as timestamp,",
+						"          End as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     limit: 100,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> sourceexisting",
+						"source(output(",
+						"          Name as string,",
+						"          ID as string,",
+						"          Group as string,",
+						"          Value as string,",
+						"          Start as timestamp 'yyyy-MM-dd\\'T\\'HH:mm:ss'",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     ignoreNoFilesFound: false) ~> sourcenewchanges",
+						"sourceexisting filter(byName('Active') == 'Y') ~> filter2",
+						"filter2 derive(ID_Hash = md5(byNames(split($PK,','))),",
+						"          Cols_Hash = md5(byNames(split($COLS,',')))) ~> derivedColumn1",
+						"derivedColumn1, derivedColumn2 exists(ID_Hash == IDHashNew,",
+						"     negate:false,",
+						"     broadcast: 'auto')~> exists1",
+						"derivedColumn1 aggregate(MaxKey = max(byName('Key'))) ~> aggregate2",
+						"sourcenewchanges derive(ID = toInteger(ID),",
+						"          Value = toInteger(Value)) ~> ModifyColumns1",
+						"ModifyColumns1 filter(!isNull(byName('ID'))) ~> filter3",
+						"filter3 derive(IDHashNew = md5(byNames(split($PK,','))),",
+						"          ColsHashNew = md5(byNames(split($COLS,',')))) ~> derivedColumn2",
+						"derivedColumn2, derivedColumn1 exists(IDHashNew == ID_Hash",
+						"     && ColsHashNew == Cols_Hash,",
+						"     negate:true,",
+						"     broadcast: 'auto')~> exists2",
+						"exists2 keyGenerate(output(KeyNew as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"surrogateKey1, aggregate2 join(1==1,",
+						"     joinType:'cross',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 derive(Active = \"Y\",",
+						"          End = toTimestamp(null()),",
+						"          Key = toInteger(byName('MaxKey'))  +  KeyNew) ~> derivedColumn3",
+						"derivedColumn3 select(mapColumn(",
+						"          Name,",
+						"          ID,",
+						"          Group,",
+						"          Value,",
+						"          Key,",
+						"          Active,",
+						"          Start = sourcenewchanges@Start,",
+						"          End",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 alterRow(insertIf(true())) ~> alterRow1",
+						"exists1 derive(Active = \"N\",",
+						"          End = currentUTC()) ~> derivedColumn4",
+						"derivedColumn4 alterRow(updateIf(true())) ~> alterRow2",
+						"alterRow2 select(mapColumn(",
+						"          Name,",
+						"          ID,",
+						"          Group,",
+						"          Value,",
+						"          Key,",
+						"          Active,",
+						"          Start,",
+						"          End",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"select2, alterRow1 union(byName: true)~> union1",
+						"union1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTableType2')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedTextType2Jul24')]"
+			]
 		}
 	]
 }

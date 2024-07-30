@@ -8,17 +8,8 @@
 		"AzBlobStorage_connectionString": {
 			"value": ""
 		},
-		"Azuremlee_password": {
+		"Azuremlee_connectionString": {
 			"value": ""
-		},
-		"Azuremlee_properties_typeProperties_server": {
-			"value": "mleep.database.windows.net"
-		},
-		"Azuremlee_properties_typeProperties_database": {
-			"value": "mlee"
-		},
-		"Azuremlee_properties_typeProperties_userName": {
-			"value": "mleepin"
 		}
 	}
 }

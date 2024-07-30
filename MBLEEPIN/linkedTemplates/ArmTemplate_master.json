@@ -11,21 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzBlobStorage'"
 		},
-		"Azuremlee_password": {
+		"Azuremlee_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'Azuremlee'"
-		},
-		"Azuremlee_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "mleep.database.windows.net"
-		},
-		"Azuremlee_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "mlee"
-		},
-		"Azuremlee_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "mleepin"
+			"metadata": "Secure string for 'connectionString' of 'Azuremlee'"
 		},
 		"containerUri": {
 			"type": "string",
@@ -57,21 +45,32 @@
 					"AzBlobStorage_connectionString": {
 						"value": "[parameters('AzBlobStorage_connectionString')]"
 					},
-					"Azuremlee_password": {
-						"value": "[parameters('Azuremlee_password')]"
-					},
-					"Azuremlee_properties_typeProperties_server": {
-						"value": "[parameters('Azuremlee_properties_typeProperties_server')]"
-					},
-					"Azuremlee_properties_typeProperties_database": {
-						"value": "[parameters('Azuremlee_properties_typeProperties_database')]"
-					},
-					"Azuremlee_properties_typeProperties_userName": {
-						"value": "[parameters('Azuremlee_properties_typeProperties_userName')]"
+					"Azuremlee_connectionString": {
+						"value": "[parameters('Azuremlee_connectionString')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "MBLEEPIN_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MBLEEPIN_ArmTemplate_0')]"
+			]
 		}
 	]
 }
