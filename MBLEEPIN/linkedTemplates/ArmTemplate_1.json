@@ -163,7 +163,7 @@
 						"          Value,",
 						"          Key,",
 						"          Active,",
-						"          Start = sourcenewchanges@Start,",
+						"          Start,",
 						"          End",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
@@ -189,8 +189,9 @@
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
-						"     updateable:false,",
+						"     updateable:true,",
 						"     upsertable:false,",
+						"     keys:[($PK)],",
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
@@ -233,7 +234,16 @@
 									"sourcenewchanges": {
 										"Folder": "Type2TuteJul24"
 									},
-									"sink1": {}
+									"sink1": {
+										"Table": "T2customer"
+									}
+								},
+								"linkedServiceParameters": {
+									"sink1": {
+										"schemaLinkedService": {
+											"Table": "T2customer"
+										}
+									}
 								}
 							},
 							"staging": {},
