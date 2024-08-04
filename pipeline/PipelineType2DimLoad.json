@@ -28,6 +28,9 @@
 							},
 							"sourcenewchanges": {
 								"Folder": "Type2TuteJul24"
+							},
+							"sink1": {
+								"Table": "T2customer"
 							}
 						}
 					},

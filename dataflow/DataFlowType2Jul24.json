@@ -147,7 +147,7 @@
 				"          Value,",
 				"          Key,",
 				"          Active,",
-				"          Start = sourcenewchanges@Start,",
+				"          Start,",
 				"          End",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
