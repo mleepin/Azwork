@@ -1730,7 +1730,7 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 alterRow(insertIf(true())) ~> alterRow1",
+						"select1 alterRow() ~> alterRow1",
 						"exists1 derive(Active = \"N\",",
 						"          End = currentUTC()) ~> derivedColumn4",
 						"derivedColumn4 alterRow(updateIf(true())) ~> alterRow2",
