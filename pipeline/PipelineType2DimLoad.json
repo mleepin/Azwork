@@ -32,13 +32,6 @@
 							"sink1": {
 								"Table": "T2customer"
 							}
-						},
-						"linkedServiceParameters": {
-							"sink1": {
-								"schemaLinkedService": {
-									"Table": "T2customer"
-								}
-							}
 						}
 					},
 					"compute": {
