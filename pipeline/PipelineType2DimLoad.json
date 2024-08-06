@@ -31,6 +31,9 @@
 							},
 							"sink1": {
 								"Table": "T2customer"
+							},
+							"sink2": {
+								"Table": "T2customer"
 							}
 						}
 					},
