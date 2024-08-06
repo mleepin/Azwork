@@ -1037,15 +1037,12 @@
 									},
 									"sink1": {
 										"Table": "T2customer"
+									},
+									"sink2": {
+										"Table": "T2customer"
 									}
 								},
-								"linkedServiceParameters": {
-									"sink1": {
-										"schemaLinkedService": {
-											"Table": "T2customer"
-										}
-									}
-								}
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
@@ -1604,6 +1601,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTableType2",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
 						}
 					],
 					"transformations": [
@@ -1655,9 +1659,6 @@
 						},
 						{
 							"name": "select2"
-						},
-						{
-							"name": "union1"
 						}
 					],
 					"scriptLines": [
@@ -1726,11 +1727,13 @@
 						"          Key,",
 						"          Active,",
 						"          Start,",
-						"          End",
+						"          End,",
+						"          ID_Hash = IDHashNew,",
+						"          Cols_Hash = ColsHashNew",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 alterRow() ~> alterRow1",
+						"select1 alterRow(insertIf(true())) ~> alterRow1",
 						"exists1 derive(Active = \"N\",",
 						"          End = currentUTC()) ~> derivedColumn4",
 						"derivedColumn4 alterRow(updateIf(true())) ~> alterRow2",
@@ -1742,22 +1745,33 @@
 						"          Key,",
 						"          Active,",
 						"          Start,",
-						"          End",
+						"          End,",
+						"          ID_Hash,",
+						"          Cols_Hash",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select2",
-						"select2, alterRow1 union(byName: true)~> union1",
-						"union1 sink(allowSchemaDrift: true,",
+						"select2 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
 						"     updateable:true,",
-						"     upsertable:false,",
+						"     upsertable:true,",
 						"     keys:[($PK)],",
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
 					]
 				}
 			},
